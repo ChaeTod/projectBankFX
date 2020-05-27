@@ -47,9 +47,6 @@ public class ServerController {
             parameters.put("login", login);
             parameters.put("password", password);
 
-
-
-
             String inputParams = "{login:" + parameters.get("login") + ", password:" + parameters.get("password") + "}";
 
             try (OutputStream outputStream = connection.getOutputStream()) {
