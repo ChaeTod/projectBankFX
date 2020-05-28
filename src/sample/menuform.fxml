@@ -4,24 +4,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
-<AnchorPane prefHeight="443.0" prefWidth="730.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane prefHeight="444.0" prefWidth="730.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MenuFormController">
    <children>
       <MenuBar layoutY="2.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#exitAction" text="Close" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" onAction="#helpPressed" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="mnHlpBtb" mnemonicParsing="false" text="About" />
             </items>
           </Menu>
         </menus>
@@ -31,6 +25,9 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <TextArea layoutX="14.0" layoutY="78.0" prefHeight="287.0" prefWidth="698.0" />
+      <TextArea fx:id="txtLogArea" editable="false" layoutX="14.0" layoutY="78.0" prefHeight="287.0" prefWidth="698.0" wrapText="true" />
+      <Button fx:id="btnLogOut" layoutX="613.0" layoutY="381.0" mnemonicParsing="false" onAction="#doLogOut" prefHeight="32.0" prefWidth="86.0" text="Log out" />
+      <Button fx:id="btnShowLog" layoutX="600.0" layoutY="42.0" mnemonicParsing="false" onAction="#showLog" prefHeight="25.0" prefWidth="112.0" text="Show user's log" />
+      <Button fx:id="btnStepBack" layoutX="514.0" layoutY="381.0" mnemonicParsing="false" onAction="#makeStepBack" prefHeight="32.0" prefWidth="86.0" text="Back" />
    </children>
 </AnchorPane>

@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.deploy.net.HttpRequest;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -13,113 +14,94 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ServerController {
-    private static String fname;
-    private static String lname;
-    private static String login;
-    private static String token;
+    private String fname;
+    private String lname;
+    private String login;
+    private String token;
 
-    public static String getFname() {
+    public String getFname() {
         return fname;
     }
 
-    public static String getLname() {
+    public String getLname() {
         return lname;
     }
 
-    public static String getLogin() {
+    public String getLogin() {
         return login;
     }
 
-    public static String getToken() {
+    public String getToken() {
         return token;
     }
 
-    public boolean logIn(String login, String password) throws IOException {
-            URL url = new URL("http://localhost:8080/login");  //create a connection to a selected url using POST method
+    public String makePostAction(String operationURL, String inputParams) throws IOException {
+        try {
+            URL url = new URL("http://localhost:8080" + operationURL);  //create a connection to a selected url using POST method
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
+/*
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://openjdk.java.net/"))
+                    .timeout(Duration.ofMinutes(1))
+                    .header("Content-Type", "application/json")
+                    .POST(BodyPublishers.ofFile(Paths.get("file.json")))
+*/
             connection.setRequestProperty("Content-Type", "application/json; utf-8");
             connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestMethod("POST");
             connection.setDoOutput(true);
-            int status = connection.getResponseCode();
-
-            Map<String, String> parameters = new HashMap<>();
-            parameters.put("login", login);
-            parameters.put("password", password);
-
-            String inputParams = "{login:" + parameters.get("login") + ", password:" + parameters.get("password") + "}";
 
             try (OutputStream outputStream = connection.getOutputStream()) {
                 byte[] input = inputParams.getBytes(StandardCharsets.UTF_8);
-                //byte[] input = parameters.get("login" + "password").getBytes(StandardCharsets.UTF_8);
                 outputStream.write(input, 0, input.length);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            status = connection.getResponseCode();
-            System.out.println(status);
-
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) { //make write to calleted result tp the variable
                 String inputLine;
                 StringBuilder content = new StringBuilder();
                 while ((inputLine = in.readLine()) != null) {
                     content.append(inputLine);
                 }
-                in.close();
-
-                JSONObject obj = new JSONObject(content.toString());
-                fname = obj.getString("fname");
-                lname = obj.getString("lname");
-                this.login = obj.getString("login");
-                token = obj.getString("token");
-
-                System.out.println(login);
-                return true;
+                //in.close();
+                return content.toString();
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        return false;
-    }
-
-    public boolean logOut(String login, String password) {
-        try {
-            URL url = new URL("http://localhost:8080/logout?token=" + token);  //create a connection to a selected url using POST method
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-
-            Map<String, String> parameters = new HashMap<>();
-            parameters.put("login", login);
-            parameters.put("password", password);
-
-            connection.setRequestProperty("Content-Type", "application/json; utf-8");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setDoOutput(true);
-
-            String inputs = "login:" + parameters.get("login");
-
-            try (OutputStream outputStream = connection.getOutputStream()) {
-                //byte[] input = parameters.get("login" + "password").getBytes(StandardCharsets.UTF_8);
-                byte[] input = inputs.getBytes(StandardCharsets.UTF_8);
-                outputStream.write(input, 0, input.length);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder content = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
-            in.close();
-            System.out.println(content.toString());
-            return true;
-
-        } catch (Exception e) {
+            //return null;
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
+    }
+
+    public boolean logIn(String login, String password) throws IOException {
+        String response = makePostAction("/login", "{login: " + login + " , password: " + password + "}");
+        System.out.println(response);
+
+        if (response.equals("Password and login are mandatory fields!") || response.equals("Wrong login or password!"))
+            return false;
+
+        JSONObject obj = new JSONObject(response);
+        fname = obj.getString("fname");
+        lname = obj.getString("lname");
+        this.login = obj.getString("login");
+        token = obj.getString("token");
+
+        System.out.println(login + " " + getToken());
+        return true;
+    }
+
+    public void logOut() throws IOException {
+        String response = makePostAction("/logout?token=" + getToken(), "{login: " + login + "}");
+        System.out.println(response);
+    }
+
+    public String showLog() throws IOException{
+        String response = makePostAction("/log?token=" + getToken(), "{login: " + login + "}");
+        System.out.println(response);
+        return response;
     }
 }
