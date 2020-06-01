@@ -95,12 +95,34 @@ public class ServerController {
     }
 
     public void logOut() throws IOException {
-        String response = makePostAction("/logout?token=" + getToken(), "{login: " + login + "}");
+        String response = makePostAction("/logout?token=" + getToken(), "{login: " + getLogin() + "}");
         System.out.println(response);
     }
 
     public String showLog() throws IOException{
-        String response = makePostAction("/log?token=" + getToken(), "{login: " + login + "}");
+        String response = makePostAction("/log?token=" + getToken(), "{login: " + getLogin() + "}");
+        System.out.println(response);
+        return response;
+    }
+
+    public boolean registerNewUser(String newUserFname, String newUserLname, String newUserLogin, String newUserPassword) throws IOException {
+        String response = makePostAction("/signup", "{fname: " + newUserFname +  " , lname: " + newUserLname + " , login: " + newUserLogin +  " , password: " + newUserPassword + "}");
+        System.out.println(response);
+
+        /* Check for an errors */
+        return true;
+    }
+
+    public boolean sendMessage(String userTo, String userMessage) throws IOException {
+        String response = makePostAction("/message/new?token=" + getToken(), "{from: " + getLogin() + " , to: " + userTo + " , message: " + userMessage + "}");
+        System.out.println(response);
+
+        /* Check for an errors */
+        return true;
+    }
+
+    public String showUserChat() throws IOException {
+        String response = makePostAction("/messages?token=" + getToken(), "{login: " + getLogin() + "}");
         System.out.println(response);
         return response;
     }

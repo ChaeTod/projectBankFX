@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="470.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.SignUpFormController">
+   <children>
+      <Button fx:id="btnSignIn" disable="true" layoutX="269.0" layoutY="417.0" mnemonicParsing="false" onAction="#signInNewUser" prefHeight="31.0" prefWidth="91.0" text="Sign In">
+         <font>
+            <Font size="15.0" />
+         </font></Button>
+      <Button fx:id="btnCancelToLogForm" layoutX="60.0" layoutY="417.0" mnemonicParsing="false" onAction="#returnBackWard" prefHeight="31.0" prefWidth="91.0" text="Cancel">
+         <font>
+            <Font size="15.0" />
+         </font></Button>
+      <Label layoutX="24.0" layoutY="80.0" text="*Input First Name:">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <TextField fx:id="fldNewUserFName" layoutX="24.0" layoutY="119.0" onKeyPressed="#isFieldEmpty" onMouseEntered="#showHelpInfoFname" onMouseExited="#resertHelpInfo" prefHeight="25.0" prefWidth="370.0" promptText="First name" />
+      <Label layoutX="26.0" layoutY="160.0" text="*Input Last Name:">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <TextField fx:id="fldNewUserLName" layoutX="26.0" layoutY="199.0" onKeyPressed="#isFieldEmpty" onMouseEntered="#showHelpInfoLname" onMouseExited="#resertHelpInfo" prefHeight="25.0" prefWidth="370.0" promptText="Last name" />
+      <Label layoutX="26.0" layoutY="244.0" text="*Input Login:">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <TextField fx:id="fldNewUserLogin" layoutX="26.0" layoutY="283.0" onKeyPressed="#isFieldEmpty" onMouseEntered="#showHelpInfoLogin" onMouseExited="#resertHelpInfo" prefHeight="25.0" prefWidth="370.0" promptText="User Login" />
+      <Label layoutX="26.0" layoutY="326.0" text="*Input Password:">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="fldNewUserPassword" layoutX="26.0" layoutY="365.0" onKeyPressed="#isFieldEmpty" onMouseEntered="#showHelpInfoPassword" onMouseExited="#resertHelpInfo" prefHeight="25.0" prefWidth="370.0" promptText="at least 8 characters" />
+      <Label fx:id="lblTopInfoText" layoutX="116.0" layoutY="22.0" text="Input your credentials" wrapText="true">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblHelpInfo" layoutX="26.0" layoutY="63.0" />
+   </children>
+</AnchorPane>

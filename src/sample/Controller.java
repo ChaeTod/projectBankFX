@@ -26,8 +26,18 @@ public class Controller {
         alert.showAndWait();
     }
 
-    public void signInButton() {
-        //Main.setPane(2);
+    public void signInButton() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("signupform.fxml"));
+        Pane root = loader.load();
+
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(root, 420, 470));
+        newStage.setTitle("Register new user");
+        newStage.setResizable(false);
+        newStage.show();
+
+        Stage window = (Stage) btnLogIn.getScene().getWindow();
+        window.close();
     }
 
     public void logInButton() throws IOException {
@@ -42,8 +52,9 @@ public class Controller {
         menuFormController.setLbl(serverController);
 
         Stage newStage = new Stage();
-        newStage.setScene(new Scene(root, 730, 444));
+        newStage.setScene(new Scene(root, 730, 520));
         newStage.setTitle("Stock Banking");
+        newStage.setResizable(false);
         newStage.show();
 
         Stage window = (Stage) btnLogIn.getScene().getWindow();
