@@ -15,7 +15,7 @@
     <children>
         <Pane prefHeight="308.0" prefWidth="413.0" GridPane.columnIndex="1">
             <children>
-                <Button fx:id="btnLogIn" disable="true" layoutX="233.0" layoutY="228.0" mnemonicParsing="false" onAction="#logInButton" prefHeight="25.0" prefWidth="111.0" text="Log In" />
+                <Button fx:id="btnLogIn" defaultButton="true" disable="true" layoutX="233.0" layoutY="228.0" mnemonicParsing="false" onAction="#logInButton" prefHeight="25.0" prefWidth="111.0" text="Log In" />
                 <Label layoutX="75.0" layoutY="56.0" text="Login" textAlignment="CENTER">
                     <font>
                         <Font name="System Bold" size="20.0" />

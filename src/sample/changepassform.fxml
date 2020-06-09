@@ -4,36 +4,38 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="420.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ChangePassFormContoller">
+<AnchorPane prefHeight="420.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ChangePassFormController">
    <children>
-      <Button layoutX="113.0" layoutY="337.0" mnemonicParsing="false" text="Change password" />
-      <Button layoutX="132.0" layoutY="374.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Cancel" />
-      <Label layoutX="74.0" layoutY="26.0" text="Change user password">
+      <Button fx:id="btnChangePass" defaultButton="true" disable="true" layoutX="113.0" layoutY="337.0" mnemonicParsing="false" onAction="#makeChangePass" text="Change password" />
+      <Button fx:id="btnStepBack" layoutX="132.0" layoutY="374.0" mnemonicParsing="false" onAction="#closeThisWindow" prefHeight="25.0" prefWidth="73.0" text="Cancel" />
+      <Label layoutX="74.0" layoutY="27.0" text="Change user password">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="24.0" layoutY="77.0" text="Input old password">
+      <Label layoutX="22.0" layoutY="83.0" text="*Input old password">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="txtOldUserPasswordText" layoutX="24.0" layoutY="114.0" prefHeight="25.0" prefWidth="288.0" promptText="old password" />
-      <Label layoutX="25.0" layoutY="169.0" text="Input new password">
+      <TextField fx:id="txtOldUserPasswordText" layoutX="24.0" layoutY="114.0" onKeyPressed="#isOldPassFieldEmpty" onKeyReleased="#isOldPassFieldEmpty" prefHeight="25.0" prefWidth="293.0" promptText="Old password" visible="false" />
+      <Label layoutX="25.0" layoutY="169.0" text="*Input new password">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <TextField layoutX="25.0" layoutY="206.0" prefHeight="25.0" prefWidth="288.0" promptText="new password" />
-      <Label layoutX="25.0" layoutY="255.0" text="Repeat new password">
+      <TextField fx:id="txtNewUserPassTxt" layoutX="25.0" layoutY="206.0" onKeyPressed="#isOldPassFieldEmpty" onKeyReleased="#isOldPassFieldEmpty" prefHeight="25.0" prefWidth="293.0" promptText="New password" visible="false" />
+      <Label layoutX="25.0" layoutY="255.0" text="*Repeat new password">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <TextField layoutX="25.0" layoutY="292.0" prefHeight="25.0" prefWidth="288.0" promptText="re-input new password" />
-      <Button layoutX="236.0" layoutY="77.0" mnemonicParsing="false" onMouseClicked="#makeInputsVisible" text="Show Input" />
-      <PasswordField fx:id="txtOldUserPassword" layoutX="23.0" layoutY="139.0" prefHeight="25.0" prefWidth="292.0" />
-      <PasswordField layoutX="25.0" layoutY="206.0" prefHeight="25.0" prefWidth="288.0" />
-      <PasswordField layoutX="25.0" layoutY="292.0" prefHeight="25.0" prefWidth="291.0" />
+      <TextField fx:id="txtRepeatNewUserPassTxt" layoutX="25.0" layoutY="292.0" onKeyPressed="#isOldPassFieldEmpty" onKeyReleased="#isOldPassFieldEmpty" prefHeight="25.0" prefWidth="293.0" promptText="Re-input new password" visible="false" />
+      <PasswordField fx:id="txtOldUserPassword" layoutX="23.0" layoutY="114.0" onKeyPressed="#isOldPassFieldEmpty" onKeyReleased="#isOldPassFieldEmpty" prefHeight="25.0" prefWidth="293.0" promptText="Old password" />
+      <PasswordField fx:id="txtNewUserPass" layoutX="25.0" layoutY="206.0" onKeyPressed="#isOldPassFieldEmpty" onKeyReleased="#isOldPassFieldEmpty" prefHeight="25.0" prefWidth="293.0" promptText="New password" />
+      <PasswordField fx:id="txtRepeatNewUserPass" layoutX="25.0" layoutY="292.0" onKeyPressed="#isOldPassFieldEmpty" onKeyReleased="#isOldPassFieldEmpty" prefHeight="25.0" prefWidth="293.0" promptText="Re-input new password" />
+      <ToggleButton fx:id="tglBtnShowInput" layoutX="288.0" layoutY="83.0" mnemonicParsing="false" onAction="#toggleVisibleInputs" selected="true" text="👁" />
+      <Label fx:id="lblTextErrorOldPass" layoutX="25.0" layoutY="146.0" prefHeight="17.0" prefWidth="293.0" textFill="RED" />
+      <Label fx:id="lblTextErrorNewPass" layoutX="25.0" layoutY="238.0" prefHeight="17.0" prefWidth="293.0" textFill="RED" />
    </children>
 </AnchorPane>

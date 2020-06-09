@@ -126,4 +126,12 @@ public class ServerController {
         System.out.println(response);
         return response;
     }
+
+    public boolean changePassword(String oldpassword, String newpassword) throws IOException {
+        String response = makePostAction("/changepassword?token=" + getToken(), "{login: " + getLogin() + " , oldpassword: " + oldpassword + " , newpassword: " + newpassword + "}");
+        System.out.println(response);
+
+        /* Check for an errors */
+        return true;
+    }
 }
