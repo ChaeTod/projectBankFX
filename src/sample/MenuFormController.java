@@ -1,23 +1,18 @@
 package sample;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import org.omg.CORBA.CODESET_INCOMPATIBLE;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.Optional;
 
 public class MenuFormController {
 
@@ -32,6 +27,9 @@ public class MenuFormController {
     public Button btnSendMessage;
     @FXML
     public Button btnChangeUserPass;
+    public Button btnDeleteUserChat;
+    public Label lblInfoTextMessage;
+    public ListView lblVIewChat;
     @FXML
     private Label userlbl;
     private static String userName = null;
@@ -53,8 +51,12 @@ public class MenuFormController {
     }
 
     public void doLogOut(ActionEvent actionEvent) throws IOException { // make logout = exit
-        serverController.logOut();
-        System.exit(0);
+        if (!serverController.logOut()) {
+            String serverAnswer = serverController.getServerResponse().toString().replaceAll("\\p{P}", "").replace("Error", " ") + "!";
+            lblInfoTextMessage.setText(serverAnswer);
+        } else {
+            System.exit(0);
+        }
     }
 
     public void exitAction() {
@@ -64,11 +66,11 @@ public class MenuFormController {
     public void showLog(ActionEvent actionEvent) throws IOException { // get and show current user's log from DB
         btnShowLog.setDisable(true);
         btnChangeUserPass.setDisable(false);
-        /*if (newStage != null && newStage.isShowing()){
-            btnChangeUserPass.setDisable(false);
-        }*/
 
-        txtLogArea.setText(serverController.showLog());
+        lblVIewChat.setItems(serverController.showLog());
+
+        //txtLogArea.setText(serverController.showLog());
+
         btnUserChat.setDisable(false);
     }
 
@@ -77,7 +79,7 @@ public class MenuFormController {
         Pane root = loader.load();
 
         Stage newStage = new Stage();
-        newStage.setScene(new Scene(root, 420, 300));
+        newStage.setScene(new Scene(root, 423, 350));
         newStage.setResizable(false);
         newStage.show();
 
@@ -88,19 +90,38 @@ public class MenuFormController {
 
     public void sendNewMessage(ActionEvent actionEvent) throws IOException { // make a send message to chat
         if (txtMessageBody.getText().length() <= 100) {
-            serverController.sendMessage(txtMessageToUser.getText(), txtMessageBody.getText());
-            //return true;
+            if (!serverController.sendMessage(txtMessageToUser.getText(), txtMessageBody.getText())) {
+                String serverAnswer = serverController.getServerResponse().toString().replaceAll("\\p{P}", "").replace("Error", " ") + "!";
+                lblInfoTextMessage.setText(serverAnswer);
+                System.out.println(serverAnswer);
+                /*txtLogin.setText("");    // show more errors if need
+                txtPassword.setText("");
+                btnLogIn.setDisable(true);*/
+            } else {
+                if (btnUserChat.isDisable()) {
+                    Thread thread = new Thread(() -> Platform.runLater(() -> {
+                        try {
+                            btnDeleteUserChat.setDisable(false);
+                            lblVIewChat.setItems(serverController.showUserChat());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }));
+                    thread.start();
+                    txtMessageBody.setText("");
+                    btnSendMessage.setDisable(true);
+                }
+            }
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Too long message!");
             alert.setHeaderText(null);
             alert.setContentText("You're trying to send a very huge message! Please, cut it into smaller pieces.");
             alert.showAndWait();
-            //return false;
         }
     }
 
-    public void resetChangePassBtn(){
+    public void resetChangePassBtn() {
         this.btnChangeUserPass.setDisable(false);
     }
 
@@ -114,35 +135,28 @@ public class MenuFormController {
         btnShowLog.setDisable(false);
         btnChangeUserPass.setDisable(false);
 
-        /*if (newStage != null && newStage.isShowing()){
-            btnChangeUserPass.setDisable(false);
-        }*/
-
         if (btnUserChat.isDisable()) {
-            final DoubleProperty prog = new SimpleDoubleProperty(0) {
+            Platform.runLater(new Runnable() {
                 @Override
-                protected void invalidated() {
+                public void run() {
                     try {
-                        txtLogArea.setText(serverController.showUserChat());
+                        //txtLogArea.setText(serverController.showUserChat()); // not in use
+                        lblVIewChat.setItems(serverController.showUserChat());
+                        if (txtMessageBody.getText().isEmpty()){
+                            btnSendMessage.setDisable(true);
+                        }
+                        if (!lblVIewChat.getItems().isEmpty())
+                            btnDeleteUserChat.setDisable(false);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            };
-            Timeline t = new Timeline();
-            t.getKeyFrames().add(new KeyFrame(Duration.seconds(20), new KeyValue(prog, 1)));
-            t.play();
+            });
         }
-        //txtLogArea.setText(serverController.showUserChat());
     }
 
     public void makeChangePass(ActionEvent actionEvent) throws IOException {  // show pop-up form with the change current message
         btnChangeUserPass.setDisable(true);
-
-        //Stage newStage = null;
-        /*if (newStage != null && newStage.isShowing()){
-            btnChangeUserPass.setDisable(false);
-        }*/
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("changepassform.fxml"));
         Pane root = loader.load();
@@ -154,5 +168,51 @@ public class MenuFormController {
         this.newStage.setScene(new Scene(root, 340, 420));
         this.newStage.setResizable(false);
         this.newStage.show();
+    }
+
+    public void makeDeleteUserChat(ActionEvent actionEvent) throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("Do you really want to delete all chat with this user?");
+
+        Optional<ButtonType> result = alert.showAndWait();  // question dialog with conformation
+        if (result.get() == ButtonType.OK) {
+            if (!serverController.deleteUserChat()) {
+                Alert alert_1 = new Alert(Alert.AlertType.INFORMATION);
+                alert_1.setTitle("Error!");
+                alert_1.setHeaderText(null);
+                alert_1.setContentText("Something went wrong! Re-check all the inputs!");
+                alert_1.showAndWait();
+            } else {
+                Alert alert_2 = new Alert(Alert.AlertType.INFORMATION);
+                alert_2.setTitle("Success!");
+                alert_2.setHeaderText(null);
+                alert_2.setContentText("User chat has been deleted!");
+                alert_2.showAndWait();
+                showUserChat(actionEvent);
+            }
+        } else {
+            alert.close();
+        }
+    }
+
+    public void checkIsItEmpty(MouseEvent mouseEvent) {
+        if (!txtLogArea.getText().isEmpty())
+            btnDeleteUserChat.setDisable(false);
+    }
+
+    public void showInfoChat(MouseEvent mouseEvent) {
+        lblInfoTextMessage.setText("Start using chat between users!");
+    }
+
+    public void resetInfoLabel(MouseEvent mouseEvent) {
+        lblInfoTextMessage.setText("");
+    }
+
+    public void showInfoLog(MouseEvent mouseEvent) {
+        lblInfoTextMessage.setText("Show user's log");
+    }
+
+    public void showChangePassInfoLabel(MouseEvent mouseEvent) {
+        lblInfoTextMessage.setText("Open change password form");
     }
 }

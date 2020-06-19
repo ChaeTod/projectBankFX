@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.AccessibleRole;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
@@ -29,11 +30,18 @@ public class ChangePassFormController {
     public Label lblTextErrorOldPass;
     public Label lblTextErrorNewPass;
 
+
+
     public void getServerController(ServerController serverController){
         ChangePassFormController.serverController = serverController;
     }
 
     public void makeChangePass(ActionEvent actionEvent) throws IOException {
+//        FXMLLoader loaderOld = new FXMLLoader();
+//        loaderOld.setLocation(getClass().getResource("menuform.fxml"));
+//
+//        loaderOld.
+
         if (!serverController.changePassword(txtOldUserPassword.getText(), txtNewUserPass.getText())){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Password hasn't been changed!");
@@ -55,24 +63,16 @@ public class ChangePassFormController {
         //FXMLLoader mainLoader = new
 
         Stage newStage = new Stage();
-        newStage.setScene(new Scene(root, 420, 300));
+        newStage.setScene(new Scene(root, 423, 350));
         newStage.setResizable(false);
         newStage.show();
 
+//        Node source = (Node) actionEvent.getSource();
         Stage window = (Stage) btnChangePass.getScene().getWindow();
         window.close();
 
-       /* ServerController serverController = new ServerController();
-        FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("menuform.fxml"));
-        //Pane mainRoot = mainLoader.load();
+//        Platform.exit(); - radical method
 
-        // set to FXML a command to use menuform.fxml instead of first fxml file. This will allow to communicate with instances from menuform.fxml
-        MenuFormController menuFormController = mainLoader.getController();
-        menuFormController.setLbl(serverController);
-
-        Stage mainWindow = (Stage) menuFormController.btnLogOut.getScene().getWindow();
-        mainWindow.close();
-        ChangePassFormController.serverController.logOut();*/
     }
 
     public void x_FormClosed(Object sender){

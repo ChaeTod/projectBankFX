@@ -23,9 +23,8 @@ public class SignUpFormController {
     public PasswordField fldNewUserPassword;
 
     public static final Pattern USER_NAME = Pattern.compile("[a-zA-Z0-9.\\-_]{3,}");
-    //public static final Pattern USER_NAME = Pattern.compile("^([a-zA-Z])+([\\w]{2,})+$");
     public static final Pattern USER_LOGIN = Pattern.compile("^([a-zA-Z])+([\\w]{2,})+$");
-    public static final Pattern USER_PASSWORD = Pattern.compile("^([a-zA-Z])+([\\w]{2,})+$");
+    //public static final Pattern USER_PASSWORD = Pattern.compile("^([a-zA-Z])+([\\w]{2,})+$");
     public static final String INFO_LBL = "Input your credentials";
     public Label lblTopInfoText;
     public Label lblHelpInfo;
@@ -67,10 +66,13 @@ public class SignUpFormController {
 
         ServerController serverController = new ServerController();
         if (!serverController.registerNewUser(fldNewUserFName.getText(), fldNewUserLName.getText(), fldNewUserLogin.getText(), fldNewUserPassword.getText())) {
+            String serverAnswer = serverController.getServerResponse().toString().replaceAll("\\p{P}", "").replace("Error", " ") + "!";
+            //System.out.println(serverAnswer);
+            lblTopInfoText.setText(serverAnswer);
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error!");
             alert.setHeaderText(null);
-            alert.setContentText("Attempt of a new user creating was failed!");
+            alert.setContentText(serverAnswer);
             alert.showAndWait();
             returnBackWard(actionEvent);
         } else {
@@ -89,7 +91,7 @@ public class SignUpFormController {
 
         //Controller controller = new Controller();
         Stage newStage = new Stage();
-        newStage.setScene(new Scene(root, 420, 300));
+        newStage.setScene(new Scene(root, 423, 350));
         newStage.setResizable(false);
         newStage.show();
 
@@ -104,7 +106,7 @@ public class SignUpFormController {
     }
 
     public boolean isVerifyLogin(String newUserLogin) {
-        Matcher matcher_login = USER_NAME.matcher(newUserLogin);
+        Matcher matcher_login = USER_LOGIN.matcher(newUserLogin);
         return matcher_login.matches();
     }
 
@@ -151,7 +153,7 @@ public class SignUpFormController {
     }
 
     public void showHelpInfoFname(MouseEvent mouseEvent) {
-        lblTopInfoText.setText("Please, input your first name");
+        lblHelpInfo.setText("Please, input your first name");
     }
 
     public void resertHelpInfo(MouseEvent mouseEvent) {
@@ -163,10 +165,10 @@ public class SignUpFormController {
     }
 
     public void showHelpInfoLogin(MouseEvent mouseEvent) {
-        lblHelpInfo.setText("Please, input your appreciated user login. You will need it make a login to the system.");
+        lblHelpInfo.setText("Input your appreciated user login.");
     }
 
     public void showHelpInfoPassword(MouseEvent mouseEvent) {
-        lblHelpInfo.setText("Please, input your user password. Note - it must be at least 8 characters in it.");
+        lblHelpInfo.setText("Note - it should have at least 8 characters in it.");
     }
 }

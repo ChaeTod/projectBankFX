@@ -11,10 +11,18 @@ import java.io.IOException;
 
 public class Controller {
 
-    @FXML private Button btnLogIn;
-    @FXML private TextField txtLogin;
-    @FXML private  PasswordField txtPassword;
-    @FXML private MenuItem MnBrHelp;
+    public Label lblErrorText;
+    public Label lblMainName;
+    public Label lblMainName1;
+    public Label lblErrorText1;
+    @FXML
+    private Button btnLogIn;
+    @FXML
+    private TextField txtLogin;
+    @FXML
+    private PasswordField txtPassword;
+    @FXML
+    private MenuItem MnBrHelp;
 
     //private static ServerController serverController = new ServerController();
 
@@ -42,35 +50,47 @@ public class Controller {
 
     public void logInButton() throws IOException {
         ServerController serverController = new ServerController();
-        serverController.logIn(txtLogin.getText(), txtPassword.getText());
+        if (!serverController.logIn(txtLogin.getText(), txtPassword.getText())) {
+            String serverAnswer = serverController.getServerResponse().toString().replaceAll("\\p{P}", "").replace("Error", " ") + "!";
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("menuform.fxml"));
-        Pane root = loader.load();
+            lblMainName1.setVisible(false);
+            lblMainName.setVisible(true);
 
-        // set to FXML a command to use menuform.fxml instead of first fxml file. This will allow to communicate with instances from menuform.fxml
-        MenuFormController menuFormController = loader.getController();
-        menuFormController.setLbl(serverController);
+            if (!serverAnswer.contains("banned")){
+                lblErrorText.setVisible(true);
+                lblErrorText.setText(serverAnswer);
+                lblErrorText1.setVisible(false);
+            }
+            else {
+                lblErrorText1.setVisible(true);
+                lblErrorText1.setText(serverAnswer);
+                lblErrorText.setVisible(false);
+            }
 
-        Stage newStage = new Stage();
-        newStage.setScene(new Scene(root, 730, 520));
-        newStage.setTitle("Stock Banking");
-        newStage.setResizable(false);
-        newStage.show();
+            //System.out.println(serverAnswer);
 
-        Stage window = (Stage) btnLogIn.getScene().getWindow();
-        window.close();
+            txtLogin.setText("");
+            txtPassword.setText("");
+            btnLogIn.setDisable(true);
+        } else {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("menuform.fxml"));
+            Pane root = loader.load();
+
+            // set to FXML a command to use menuform.fxml instead of first fxml file. This will allow to communicate with instances from menuform.fxml
+            MenuFormController menuFormController = loader.getController();
+            menuFormController.setLbl(serverController);
+
+            Stage newStage = new Stage();
+            newStage.setScene(new Scene(root, 730, 520));
+            newStage.setTitle("Stock Banking");
+            newStage.setResizable(false);
+            newStage.show();
+
+            Stage window = (Stage) btnLogIn.getScene().getWindow();
+            window.close();
+        }
     }
 
-    /*
-    public Scene thisStage() throws IOException {
-        Pane root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        Stage curSt = new Stage();
-        curSt.setTitle("Welcome to Stock Bank");
-        curSt.setScene(new Scene(root, 420, 300));
-        curSt.show();
-        return curSt.getScene();
-    }
-*/
     public void fieldInputCheck() {
         if (!txtLogin.getText().isEmpty() && !txtPassword.getText().isEmpty()) {
             btnLogIn.setDisable(false);

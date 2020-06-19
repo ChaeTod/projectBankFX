@@ -25,19 +25,22 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <TextArea fx:id="txtLogArea" editable="false" layoutX="14.0" layoutY="78.0" prefHeight="287.0" prefWidth="698.0" wrapText="true" />
+      <TextArea fx:id="txtLogArea" disable="true" editable="false" layoutX="14.0" layoutY="78.0" onMouseMoved="#checkIsItEmpty" prefHeight="287.0" prefWidth="698.0" visible="false" wrapText="true" />
       <Button fx:id="btnLogOut" layoutX="617.0" layoutY="432.0" mnemonicParsing="false" onAction="#doLogOut" prefHeight="32.0" prefWidth="86.0" text="Exit" />
-      <Button fx:id="btnShowLog" layoutX="451.0" layoutY="42.0" mnemonicParsing="false" onAction="#showLog" prefHeight="25.0" prefWidth="112.0" text="Show user's log" />
+      <Button fx:id="btnShowLog" layoutX="451.0" layoutY="42.0" mnemonicParsing="false" onAction="#showLog" onMouseEntered="#showInfoLog" onMouseExited="#resetInfoLabel" prefHeight="25.0" prefWidth="112.0" text="Show user's log" />
       <Button fx:id="btnStepBack" layoutX="518.0" layoutY="432.0" mnemonicParsing="false" onAction="#makeStepBack" prefHeight="32.0" prefWidth="86.0" text="Log Out" />
-      <Button fx:id="btnUserChat" layoutX="363.0" layoutY="42.0" mnemonicParsing="false" onAction="#showUserChat" prefHeight="25.0" prefWidth="77.0" text="Chat" />
-      <Button fx:id="btnChangeUserPass" layoutX="574.0" layoutY="42.0" mnemonicParsing="false" onAction="#makeChangePass" text="Change User Password" />
+      <Button fx:id="btnUserChat" layoutX="363.0" layoutY="42.0" mnemonicParsing="false" onAction="#showUserChat" onMouseEntered="#showInfoChat" onMouseExited="#resetInfoLabel" prefHeight="25.0" prefWidth="77.0" text="Chat" />
+      <Button fx:id="btnChangeUserPass" layoutX="574.0" layoutY="42.0" mnemonicParsing="false" onAction="#makeChangePass" onMouseEntered="#showChangePassInfoLabel" onMouseExited="#resetInfoLabel" text="Change User Password" />
       <TextArea fx:id="txtMessageBody" layoutX="14.0" layoutY="374.0" onKeyReleased="#isMessageAreaEmpty" prefHeight="90.0" prefWidth="479.0" promptText="Message" />
-      <TextField fx:id="txtMessageToUser" layoutX="507.0" layoutY="394.0" prefHeight="25.0" prefWidth="207.0" />
+      <TextField fx:id="txtMessageToUser" layoutX="507.0" layoutY="394.0" onKeyReleased="#isMessageAreaEmpty" prefHeight="25.0" prefWidth="207.0" />
       <Label layoutX="507.0" layoutY="366.0" prefHeight="27.0" prefWidth="77.0" text="Send to:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="btnSendMessage" disable="true" layoutX="413.0" layoutY="473.0" mnemonicParsing="false" onAction="#sendNewMessage" prefHeight="25.0" prefWidth="77.0" text="Send" />
+      <Button fx:id="btnSendMessage" disable="true" layoutX="416.0" layoutY="473.0" mnemonicParsing="false" onAction="#sendNewMessage" prefHeight="25.0" prefWidth="77.0" text="Send" />
+      <Button fx:id="btnDeleteUserChat" disable="true" layoutX="14.0" layoutY="473.0" mnemonicParsing="false" onAction="#makeDeleteUserChat" prefHeight="25.0" prefWidth="123.0" text="Delete User Chat" />
+      <Label fx:id="lblInfoTextMessage" layoutX="493.0" layoutY="13.0" />
+      <ListView fx:id="lblVIewChat" layoutX="14.0" layoutY="78.0" prefHeight="287.0" prefWidth="698.0" />
    </children>
 </AnchorPane>
